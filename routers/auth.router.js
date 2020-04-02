@@ -9,17 +9,16 @@ Imports
 /*
 Routes definition
 */
-    class ApiRouterClass {
+    class AuthRouterClass {
 
         // Inject Passport to secure routes
         constructor() {}
         
         // Set route fonctions
         routes(){
-            
-            
-            router.get('/', (req, res) => {
-                return res.json({ msg: 'Hello API' })
+
+            router.get('/', (req, res)=> {
+                return res.json({ msg: 'Hello /api/auth' })
             })
             
         };
@@ -38,5 +37,5 @@ Routes definition
 /*
 Export
 */
-    module.exports = ApiRouterClass;
+    module.exports = AuthRouterClass;
 //

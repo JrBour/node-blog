@@ -36,10 +36,18 @@ Config
         };
 
         routes(){
-            // Global API router
+            // Set global API router
             const ApiRouterClass = require('./routers/api.router');
             const apiRouter = new ApiRouterClass();
-            server.use('/api', apiRouter.init())
+            server.use('/api', apiRouter.init());
+
+            // Set auth router
+            const AuthRouterClass = require('./routers/auth.router');
+            const authRouter = new AuthRouterClass();
+            server.use('/api/auth', authRouter.init());
+
+            // Set front router
+            server.get('/*',  (req, res) => res.render('index') );
         };
 
         launch(){
