@@ -19,40 +19,40 @@ Routes definition
             /* 
             CRUD: Create route 
             */
-                router.post('/', (req, res) => {
-                    return res.json({ msg: 'CRUD: Create route' })
+                router.post('/:endpoint', (req, res) => {
+                    return res.json({ msg: 'CRUD: Create route', endpoint: req.params.endpoint })
                 })
             //
 
             /* 
             CRUD: Read all route 
             */
-                router.get('/', (req, res) => {
-                    return res.json({ msg: 'CRUD: Read all route' })
+                router.get('/:endpoint', (req, res) => {
+                    return res.json({ msg: 'CRUD: Read all route', endpoint: req.params.endpoint })
                 })
             //
 
             /* 
             CRUD: Read one route
             */
-                router.get('/:id', (req, res) => {
-                    return res.json({ msg: 'CRUD: Read one route', id: req.params.id })
+                router.get('/:endpoint/:id', (req, res) => {
+                    return res.json({ msg: 'CRUD: Read one route', endpoint: req.params.endpoint, id: req.params.id })
                 })
             //
 
             /* 
             CRUD: Update route 
             */
-                router.put('/:id', (req, res) => {
-                    return res.json({ msg: 'CRUD: Update route', id: req.params.id })
+                router.put('/:endpoint/:id', (req, res) => {
+                    return res.json({ msg: 'CRUD: Update route', endpoint: req.params.endpoint, id: req.params.id })
                 })
             //
 
             /* 
             CRUD: Delete route 
             */
-                router.delete('/:id', (req, res) => {
-                    return res.json({ msg: 'CRUD: Update route', id: req.params.id })
+                router.delete('/:endpoint/:id', (req, res) => {
+                    return res.json({ msg: 'CRUD: Delete route', endpoint: req.params.endpoint, id: req.params.id })
                 })
             //            
         };
