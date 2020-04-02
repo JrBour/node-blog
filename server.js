@@ -36,7 +36,10 @@ Config
         };
 
         routes(){
-            
+            // Global API router
+            const ApiRouterClass = require('./routers/api.router');
+            const apiRouter = new ApiRouterClass();
+            server.use('/api', apiRouter.init())
         };
 
         launch(){
