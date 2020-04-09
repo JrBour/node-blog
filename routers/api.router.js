@@ -4,6 +4,9 @@ Imports
     // Node
     const express = require('express');
     const router = express.Router();
+
+    // Inner
+    const mysql = require('mysql');
 //
 
 /*
@@ -28,7 +31,32 @@ Routes definition
             CRUD: Read all route 
             */
                 router.get('/:endpoint', (req, res) => {
-                    return res.json({ msg: 'CRUD: Read all route', endpoint: req.params.endpoint })
+                    // Set MySQL connection
+                    const connection = mysql.createConnection({
+                        host     : 'localhost',
+                        port     :  8889,
+                        user     : 'root',
+                        password : 'root',
+                        database : 'api-node'
+                    })
+                    
+                    // Connect the DB
+                    connection.connect( (connectionError) => {
+                        if (connectionError) {
+                            return res.json({ msg: 'MYSQL: error connecting', err: connectionError })
+                        }
+                        else{
+                            // Get all item from table :endpoint
+                            connection.query(`SELECT * FROM ${req.params.endpoint}`, (queryError, results, fields) => {
+                                if (queryError) {
+                                    return res.json({ msg: 'MYSQL: error query', err: queryError })
+                                }
+                                else{
+                                    return res.json({ msg: 'MYSQL: OK query', results: results, fields: fields })
+                                }
+                            });
+                        };
+                    });
                 })
             //
 

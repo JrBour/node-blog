@@ -55,7 +55,7 @@ Config
             this.routes();
 
             // Launch server
-            server.listen(port, () => console.log(`Server is running on port ${port}`))
+            server.listen(port, () => console.log(`Server is running: http://localhost:${port}`))
         };
     }
 //
