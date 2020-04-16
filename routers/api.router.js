@@ -25,28 +25,14 @@ Routes definition
             /* 
             CRUD: Create route 
             */
-                router.get('/test/test', (req, res) => {
-                    const MYSQLquery = new MYSQLCrudClass('localhost', 8889, 'root', 'root', 'api-node', 'post')
-
-                    MYSQLquery.readAllItems()
-                        .then( response => {
-                            console.log(response)
-                            return res.json({ msg: 'MYSQLclass: OK query', response })
-                        })
-                        .catch( err => {
-                            console.log(err)
-                            return res.json({ msg: 'MYSQLclass: error query', err })
-                        })
-                })
-            
                 router.post('/:endpoint', (req, res) => {
                     // Set MySQL connection
                     const connection = mysql.createConnection({
-                        host     : 'localhost',
-                        port     :  8889,
-                        user     : 'root',
-                        password : 'root',
-                        database : 'api-node'
+                        host     : process.env.MYSQL_HOST,
+                        port     :  process.env.MYSQL_PORT,
+                        user     : process.env.MYSQL_USER,
+                        password : process.env.MYSQL_PASS,
+                        database : process.env.MYSQL_DB
                     })
                     
                     // Connect the DB
@@ -77,11 +63,11 @@ Routes definition
                 router.get('/:endpoint', (req, res) => {
                     // Set MySQL connection
                     const connection = mysql.createConnection({
-                        host     : 'localhost',
-                        port     :  8889,
-                        user     : 'root',
-                        password : 'root',
-                        database : 'api-node'
+                        host     : process.env.MYSQLCrudClass,
+                        port     :  process.env.MYSQL_PORT,
+                        user     : process.env.MYSQL_USER,
+                        password : process.env.MYSQL_PASS,
+                        database : process.env.MYSQL_DB
                     })
                     
                     // Connect the DB
@@ -110,11 +96,11 @@ Routes definition
                 router.get('/:endpoint/:id', (req, res) => {
                     // Set MySQL connection
                     const connection = mysql.createConnection({
-                        host     : 'localhost',
-                        port     :  8889,
-                        user     : 'root',
-                        password : 'root',
-                        database : 'api-node'
+                        host     : process.env.MYSQLCrudClass,
+                        port     :  process.env.MYSQL_PORT,
+                        user     : process.env.MYSQL_USER,
+                        password : process.env.MYSQL_PASS,
+                        database : process.env.MYSQL_DB
                     })
                     
                     // Connect the DB
@@ -143,11 +129,11 @@ Routes definition
                 router.put('/:endpoint/:id', (req, res) => {
                     // Set MySQL connection
                     const connection = mysql.createConnection({
-                        host     : 'localhost',
-                        port     :  8889,
-                        user     : 'root',
-                        password : 'root',
-                        database : 'api-node'
+                        host     : process.env.MYSQLCrudClass,
+                        port     :  process.env.MYSQL_PORT,
+                        user     : process.env.MYSQL_USER,
+                        password : process.env.MYSQL_PASS,
+                        database : process.env.MYSQL_DB
                     })
                     
                     // Connect the DB
@@ -180,11 +166,11 @@ Routes definition
                 router.delete('/:endpoint/:id', (req, res) => {
                     // Set MySQL connection
                     const connection = mysql.createConnection({
-                        host     : 'localhost',
-                        port     :  8889,
-                        user     : 'root',
-                        password : 'root',
-                        database : 'api-node'
+                        host     : process.env.MYSQLCrudClass,
+                        port     :  process.env.MYSQL_PORT,
+                        user     : process.env.MYSQL_USER,
+                        password : process.env.MYSQL_PASS,
+                        database : process.env.MYSQL_DB
                     })
                     
                     // Connect the DB

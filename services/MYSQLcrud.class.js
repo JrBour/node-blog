@@ -36,9 +36,6 @@ class MYSQLCrudClass {
                     });
                 }
             });
-
-
-            
         })
     }
 }
