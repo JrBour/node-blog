@@ -7,7 +7,9 @@ Import
     const bodyParser = require('body-parser'); //=> https://www.npmjs.com/package/body-parser
     const cookieParser = require('cookie-parser'); //=> https://www.npmjs.com/package/cookie-parser
     const path = require('path'); //=> https://www.npmjs.com/package/path
-    const passport = require('passport'); //=> https://www.npmjs.com/package/passport
+
+    // Inner
+    const MYSQLClass = require('./services/mysql.class');
 //
 
 /* 
@@ -19,6 +21,11 @@ Config
 
     // Server class
     class ServerClass{
+        constructor(){
+            // Instanciate MYSQL
+            this.MYSQL = new MYSQLClass;
+        }
+
         init(){
             // Static path configuration
             server.set( 'views', __dirname + '/www' );
@@ -31,37 +38,46 @@ Config
             //=> Use CookieParser to setup serverside cookies
             server.use(cookieParser(process.env.COOKIE_SECRET));
 
-            // Start server
-            this.launch();
+            // Start server configuration
+            this.config();
         };
 
-        routes(){
-            // Set global API router
-            const ApiRouterClass = require('./routers/api.router');
-            const apiRouter = new ApiRouterClass();
-            server.use('/api', apiRouter.init());
+        config(){
+            // Connect the DB
+            this.MYSQL.connectDb()
+            .then( connection => {
+                // Set global API router
+                const ApiRouterClass = require('./routers/api.router');
+                const apiRouter = new ApiRouterClass(connection);
+                server.use('/api', apiRouter.init());
 
-            // Set auth router
-            const AuthRouterClass = require('./routers/auth.router');
-            const authRouter = new AuthRouterClass();
-            server.use('/api/auth', authRouter.init());
+                // Set auth router
+                const AuthRouterClass = require('./routers/auth.router');
+                const authRouter = new AuthRouterClass(connection);
+                server.use('/api/auth', authRouter.init());
 
-            // Set front router
-            server.get('/*',  (req, res) => res.render('index') );
+                // Set front router
+                server.get('/*',  (req, res) => res.render('index') );
+
+                // Launch server
+                this.launch();
+            })
+            .catch( connectionError => {
+                console.log(`MYsql connection error: ${connectionError}`)
+            })
         };
 
         launch(){
-            // Init Routers
-            this.routes();
-
-            // Launch server
-            server.listen(port, () => console.log(`Server is running: http://localhost:${port}`))
+            server.listen(port, () => {
+                console.log(`Server is running: http://localhost:${port}`)
+            })
         };
     }
 //
 
 /* 
-Start
+Start server
 */
-    new ServerClass().init();
+    const NODEapi_boilerplate = new ServerClass();
+    NODEapi_boilerplate.init();
 //
