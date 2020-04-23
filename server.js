@@ -1,25 +1,31 @@
 /* 
-Import
+Imports
 */
-    // NodeJS
+    // NPM modules
     require('dotenv').config(); //=> https://www.npmjs.com/package/dotenv
     const express = require('express'); //=> https://www.npmjs.com/package/express
     const bodyParser = require('body-parser'); //=> https://www.npmjs.com/package/body-parser
     const cookieParser = require('cookie-parser'); //=> https://www.npmjs.com/package/cookie-parser
+
+    // NodeJS modules
     const path = require('path'); //=> https://www.npmjs.com/package/path
 
-    // Inner
+    // Inner modules
     const MYSQLClass = require('./services/mysql.class');
 //
 
+
 /* 
-Config
+Declarations
 */
-    // Declarations
     const server = express();
     const port = process.env.PORT;
+//
 
-    // Server class
+
+/* 
+Server class
+*/
     class ServerClass{
         constructor(){
             // Instanciate MYSQL
