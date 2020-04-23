@@ -6,6 +6,7 @@ Imports
     const express = require('express'); //=> https://www.npmjs.com/package/express
     const bodyParser = require('body-parser'); //=> https://www.npmjs.com/package/body-parser
     const cookieParser = require('cookie-parser'); //=> https://www.npmjs.com/package/cookie-parser
+    const ejs = require('ejs'); //=> https://www.npmjs.com/package/ejs
 
     // NodeJS modules
     const path = require('path'); //=> https://www.npmjs.com/package/path
@@ -33,6 +34,9 @@ Server class
         }
 
         init(){
+            server.engine( 'html', ejs.renderFile );
+            server.set( 'view engine', 'html' );
+            
             // Static path configuration
             server.set( 'views', __dirname + '/www' );
             server.use( express.static(path.join(__dirname, 'www')) );
