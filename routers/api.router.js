@@ -16,6 +16,16 @@ Routes definition
             // Instanciate MYsql connection
             this.connection = connection;
         }
+
+        // Methode to get data from :endpoint and :id
+        getDataFromid( endpoint, option ){
+            return new Promise( (resolve, reject) => {
+                // Get item by ID from table :endpoint
+                this.connection.query(`SELECT * FROM ${endpoint} WHERE ${option}`, (queryError, results, fields) => {
+                    return queryError ? reject(queryError) : resolve(results);
+                });
+            })
+        }
         
         // Set route fonctions
         routes(){
@@ -66,16 +76,34 @@ Routes definition
             /* 
             CRUD: Read one route
             */
-                router.get('/:endpoint/:id', (req, res) => {
-                    // Get item by ID from table :endpoint
-                    this.connection.query(`SELECT * FROM ${req.params.endpoint} WHERE id = ${req.params.id}`, (queryError, results, fields) => {
-                        if (queryError) {
-                            return res.json({ msg: 'MYSQL: error query', err: queryError })
-                        }
-                        else{
-                            return res.json({ msg: 'MYSQL: OK query', results: results, fields: fields })
-                        }
-                    });
+                router.get('/:endpoint/:id', async (req, res) => {
+
+                    if( req.params.endpoint === 'post' ){
+                        return Promise.all([
+                            this.getDataFromid('post', `id=${req.params.id}`),
+                            this.getDataFromid('comment', `subject=${req.params.id}`)
+                        ])
+                        .then( async allData => {
+                            const author = await this.getDataFromid('users', `id=${allData[0][0].author}`)
+                            return res.json({ msg: 'MYSQL: OK query', data: { post: allData[0], comments: allData[1], author: author } })
+                        })
+                        .catch( mysqlError => {
+                            return res.json({ msg: 'MYSQL: error query', err: mysqlError })
+                        });
+                    }
+                    else if(req.params.endpoint === 'users'){
+                        return Promise.all([
+                            this.getDataFromid('users', `id=${req.params.id}`),
+                            this.getDataFromid('post', `author=${req.params.id}`),
+                            this.getDataFromid('comment', `author=${req.params.id}`)
+                        ])
+                        .then( allData => {
+                            return res.json({ msg: 'MYSQL: OK query', data: { user: allData[0], posts: allData[1], comments: allData[2] } })
+                        })
+                        .catch( mysqlError => {
+                            return res.json({ msg: 'MYSQL: error query', err: mysqlError })
+                        })
+                    }
                 })
             //
 
