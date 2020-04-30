@@ -24,27 +24,106 @@ Routes definition
             CRUD: Create route 
             */
                 router.post('/:endpoint', (req, res) => {
-                // Set empty data
-                let data = {};
+                    // Set empty data
+                    let data = {};
 
-                // Check endpoint
-                if(req.params.endpoint === 'post'){
-                    // Define post data
-                    data = {
-                        title: req.body.title,
-                        content: req.body.content
-                    }
+                    // Check endpoint
+                    if(req.params.endpoint === 'post'){
+                        // Define post data
+                        data = {
+                            title: req.body.title,
+                            content: req.body.content
+                        }
 
-                    // MONGODB Create new document in 'posts' collection
-                    PostModel.create(data)
-                    .then( document => {
-                        return res.json( { msg: 'Document created!', data: document, err: null } );
+                        // MONGODB Create new document in 'posts' collection
+                        PostModel.create(data)
+                        .then( document => {
+                            return res.json( { msg: 'Document created!', data: document, err: null } );
+                        })
+                        .catch( mongoError => {
+                            return res.json( { msg: 'Document not created...', data: null, err: mongoError } );
+                        });
+                    };                
+                });
+            //
+
+            /* 
+            CRUD: Read all route 
+            */
+                router.get('/:endpoint', (req, res) => {
+                    // Get all item from table :endpoint
+                    PostModel.find( (mongoError, documents) => {
+                        if( mongoError ){
+                            return res.json( { msg: 'Documents not found...', data: null, err: mongoError });
+                        }
+                        else{
+                            return res.json( { msg: 'Documents found!', data: documents, err: null } );
+                        }
                     })
-                    .catch( mongoError => {
-                        return res.json( { msg: 'Document not created...', data: null, err: mongoError } );
-                    })
-                }                
-            })
+                })
+            //
+
+            /* 
+            CRUD: Read one route
+            */
+                router.get('/:endpoint/:id', async (req, res) => {
+
+                    // Check endpoint
+                    if(req.params.endpoint === 'post'){
+                        PostModel.findById( req.params.id, (mongoError, document) => {
+                            if( mongoError ){
+                                return res.json( { msg: 'Document not found...', data: null, err: mongoError });
+                            }
+                            else{
+                                return res.json( { msg: 'Document found!', data: document, err: null } );
+                            }
+                        });
+                    };
+                })
+            //
+
+            /* 
+            CRUD: Update route 
+            */
+                router.put('/:endpoint/:id', (req, res) => {
+                    // Check endpoint
+                    if(req.params.endpoint === 'post'){
+                        PostModel.findById( req.params.id, (mongoError, document) => {
+                            if( mongoError ){
+                                return res.json( { msg: 'Document not found...', data: null, err: mongoError });
+                            }
+                            else{
+                                // Update documeent data
+                                document.title = req.body.title;
+                                document.content = req.body.content;
+
+                                // Save document
+                                document.save()
+                                .then( updatedDocument => {
+                                    return res.json( { msg: 'Document updated!', data: updatedDocument, err: null } );
+                                })
+                                .catch( mongSaveError => {
+                                    return res.json( { msg: 'Document not updated...', data: null, err: mongSaveError });
+                                });
+                            };
+                        });
+                    };
+                });
+            //
+
+            /* 
+            CRUD: Delete route 
+            */
+                router.delete('/:endpoint/:id', (req, res) => {
+                    PostModel.findOneAndDelete({ _id: req.params.id }, ( mongoError, mongoSucces ) => {
+                        if( mongoError ){
+                            return res.json( { msg: 'Document not deleted...', data: null, err: mongoError });
+                        }
+                        else{
+                            return res.json( { msg: 'Document deleted!', data: mongoSucces, err: null } );
+                        }
+                    });
+                });
             //
         };
 
