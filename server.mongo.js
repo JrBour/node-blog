@@ -54,9 +54,9 @@ Server class
 
         config(){
             // Set auth router
-            const AuthRouterClass = require('./routers/auth.router');
-            const authRouter = new AuthRouterClass();
-            server.use('/api/auth', authRouter.init());
+            const CrudMongoRouterClass = require('./routers/crud.mongo.router');
+            const crudMongoRouter = new CrudMongoRouterClass();
+            server.use('/api/mongo', crudMongoRouter.init());
 
             // Set front router
             server.get('/*',  (req, res) => res.render('index') );

@@ -9,7 +9,7 @@ Imports
 /*
 Routes definition
 */
-    class ApiRouterClass {
+    class CrudMongoRouterClass {
 
         // Inject Passport to secure routes
         constructor(connection) {
@@ -161,5 +161,5 @@ Routes definition
 /*
 Export
 */
-    module.exports = ApiRouterClass;
+    module.exports = CrudMongoRouterClass;
 //
