@@ -7,6 +7,7 @@ Imports
 
     // Inner
     const PostModel = require('../models/post.schema');
+    const CommentModel = require('../models/comment.schema');
 //
 
 /*
@@ -43,7 +44,24 @@ Routes definition
                         .catch( mongoError => {
                             return res.json( { msg: 'Document not created...', data: null, err: mongoError } );
                         });
-                    };                
+                    }
+                    else if(req.params.endpoint === 'comment'){
+                        // Define post data
+                        data = {
+                            content: req.body.content,
+                            subject: req.body.subject,
+                            author: req.body.author
+                        }
+
+                        // MONGODB Create new document in 'posts' collection
+                        CommentModel.create(data)
+                        .then( document => {
+                            return res.json( { msg: 'Document created!', data: document, err: null } );
+                        })
+                        .catch( mongoError => {
+                            return res.json( { msg: 'Document not created...', data: null, err: mongoError } );
+                        });
+                    }             
                 });
             //
 
