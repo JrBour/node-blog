@@ -4,12 +4,15 @@ Imports
     // Node
     const express = require('express');
     const router = express.Router();
+
+    // Inner
+    const PostModel = require('../models/post.schema');
 //
 
 /*
 Routes definition
 */
-    class AuthRouterClass {
+    class CrudMongoRouterClass {
 
         // Inject Passport to secure routes
         constructor() {}
@@ -17,10 +20,32 @@ Routes definition
         // Set route fonctions
         routes(){
 
-            router.get('/', (req, res)=> {
-                return res.json({ msg: 'Hello /api/auth' })
+            /* 
+            CRUD: Create route 
+            */
+                router.post('/:endpoint', (req, res) => {
+                // Set empty data
+                let data = {};
+
+                // Check endpoint
+                if(req.params.endpoint === 'post'){
+                    // Define post data
+                    data = {
+                        title: req.body.title,
+                        content: req.body.content
+                    }
+
+                    // MONGODB Create new document in 'posts' collection
+                    PostModel.create(data)
+                    .then( document => {
+                        return res.json( { msg: 'Document created!', data: document, err: null } );
+                    })
+                    .catch( mongoError => {
+                        return res.json( { msg: 'Document not created...', data: null, err: mongoError } );
+                    })
+                }                
             })
-            
+            //
         };
 
         // Start router
@@ -37,5 +62,5 @@ Routes definition
 /*
 Export
 */
-    module.exports = AuthRouterClass;
+    module.exports = CrudMongoRouterClass;
 //
