@@ -13,6 +13,7 @@ Imports
 
     // Inner modules
     const MONGOclass = require('./services/mongo.class');
+    const MYSQLClass = require('./services/mysql.class');
 //
 
 
@@ -31,6 +32,9 @@ Server class
         constructor(){
             // Instanciate MongoDB
             this.MONGO = new MONGOclass;
+
+            // Instanciate MYSQL
+            this.MYSQL = new MYSQLClass;
         }
 
         init(){
@@ -53,16 +57,28 @@ Server class
         };
 
         config(){
-            // Set auth router
-            const CrudMongoRouterClass = require('./routers/crud.mongo.router');
-            const crudMongoRouter = new CrudMongoRouterClass();
-            server.use('/api/mongo', crudMongoRouter.init());
+            // Connect the DB
+            this.MYSQL.connectDb()
+            .then( connection => {
+                // Set Mongo router
+                const CrudMongoRouterClass = require('./routers/crud.mongo.router');
+                const crudMongoRouter = new CrudMongoRouterClass();
+                server.use('/api/mongo', crudMongoRouter.init());
 
-            // Set front router
-            server.get('/*',  (req, res) => res.render('index') );
+                // Set MySQL router
+                const CrudMySqlRouterClass = require('./routers/crud.mysql.router');
+                const crudmySqlRouter = new CrudMySqlRouterClass(connection);
+                server.use('/api/mysql', crudmySqlRouter.init());
 
-            // Launch server
-            this.launch();
+                // Set front router
+                server.get('/*',  (req, res) => res.render('index') );
+
+                // Launch server
+                this.launch();
+            })
+            .catch( connectionError => {
+                console.log(`MYsql connection error: ${connectionError}`)
+            })
         };
 
         launch(){
@@ -73,7 +89,8 @@ Server class
                 server.listen(port, () => {
                     console.log({
                         node: `http://localhost:${port}`,
-                        mongo: db
+                        mongo: db.url,
+                        mysql: `mysql://${process.env.MYSQL_HOST}:${process.env.MYSQL_PORT}`
                     });
                 });
             })
