@@ -1,24 +1,12 @@
-/*
-Import
-*/
-    const mongoose = require('mongoose');
-    const { Schema } = mongoose;
-//
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
+const MySchema = new Schema({
+    pseudo: { unique: true, type: String },
+    email: { unique: true, type: String },
+    password: String,
+    created_at: { type: Date, default: Date.now },
+});
 
-/*
-Definition
-*/
-    const MySchema = new Schema({
-        name: String,
-        email: { unique: true, type: String },
-        password: String
-    });
-//
-
-/*
-Export
-*/
-    const MyModel = mongoose.model('user', MySchema);
-    module.exports = MyModel;
-//
+const MyModel = mongoose.model('user', MySchema);
+module.exports = MyModel;
