@@ -11,7 +11,7 @@ Definition
 */
     const MySchema = new Schema({
         name: String,
-        email: String,
+        email: { unique: true, type: String },
         password: String
     });
 //

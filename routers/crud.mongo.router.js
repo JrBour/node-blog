@@ -19,8 +19,9 @@ Routes definition
 
         // Inject Passport to secure routes
         constructor() {
+            // Instanciate router
             this.router = express.Router();
-        }
+        };
         
         // Set route fonctions
         routes(){
