@@ -5,7 +5,7 @@ const MySchema = new Schema({
 	title: String,
 	content: String,
 	author: {
-		type: mongoose.Schema.Type.ObjectId,
+		type: Schema.Types.ObjectId,
 		ref: 'user'
 	},
 	created_at: { type: Date, default: Date.now },

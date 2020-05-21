@@ -1,9 +1,7 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const PostModel = require('../models/post.schema');
-const UserModel = require('../models/user.schema');
 
-class CrudMongoRouterClass {
+class PostRouter {
   constructor() {
     this.router = express.Router();
   };
@@ -55,4 +53,4 @@ class CrudMongoRouterClass {
   };
 };
 
-module.exports = CrudMongoRouterClass;
+module.exports = PostRouter;
