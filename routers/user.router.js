@@ -36,6 +36,12 @@ class UserRouter {
         };
       });
     });
+
+    this.router.get('/users/:id', (req, res) => {
+      UserModel.findById(req.params.id)
+        .then(data => res.status(200).json({ data }))
+        .catch(error => res.status(502).json({ error }));
+    });
   };
 
   init() {

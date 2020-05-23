@@ -14,13 +14,19 @@ class PostRouter {
     });
 
     this.router.get("/comments", (req, res) => {
-      CommentModel.find()
+      CommentModel.find().populate('author')
+        .then((data) => res.status(200).json({ data }))
+        .catch((error) => res.status(502).json({ error }));
+    });
+
+    this.router.get("/posts/:id/comments", (req, res) => {
+      CommentModel.find({ post: req.params.id }).populate('author')
         .then((data) => res.status(200).json({ data }))
         .catch((error) => res.status(502).json({ error }));
     });
 
     this.router.get("/comments/:id", (req, res) => {
-      CommentModel.findById(req.params.id)
+      CommentModel.findById(req.params.id).populate('author')
         .then((data) => res.status(200).json({ data }))
         .catch((error) => res.status(502).json({ error }));
     });

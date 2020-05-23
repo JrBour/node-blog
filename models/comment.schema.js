@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 
 const MySchema = new Schema({
   content: String,
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'user'
+  },
   post: {
     type: Schema.Types.ObjectId,
     ref: 'post'

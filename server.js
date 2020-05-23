@@ -1,9 +1,10 @@
 require("dotenv").config();
+const cors = require("cors");
+const ejs = require("ejs");
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const ejs = require("ejs");
-const path = require("path");
 
 const { mainRouter } = require('./routers/main.router');
 
@@ -22,11 +23,11 @@ class ServerClass {
     server.set("view engine", "html");
 
     server.set("views", __dirname + "/www");
-    server.use(express.static(path.join(__dirname, "www")));
+    server.use(express.static(path.join(__dirname, "www/uploads")));
     server.use(bodyParser.json({ limit: "10mb" }));
     server.use(bodyParser.urlencoded({ extended: true }));
+    server.use(cors())
     server.use(cookieParser(process.env.COOKIE_SECRET));
-
     this.config();
   }
 
