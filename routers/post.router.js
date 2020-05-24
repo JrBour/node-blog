@@ -39,6 +39,15 @@ class PostRouter {
         .catch(error => res.status(502).json({ error }));
     });
 
+    this.router.get('/posts/search', (req, res) => {
+      const regexQuery = {
+        title: new RegExp(req.query.title, 'i')
+      };
+      PostModel.find(regexQuery)
+        .then(data => res.status(200).json({ data }))
+        .catch(error => res.status(502).json({ error }));
+    })
+
     this.router.get('/posts/:id', (req, res) => {
       PostModel.findById(req.params.id).populate('author')
         .then(data => res.status(200).json({ data }))
