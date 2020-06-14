@@ -5,6 +5,8 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const mongo_express = require('mongo-express/lib/middleware')
+const mongo_express_config = require('./mongo_express_config')
 
 const { mainRouter } = require('./routers/main.router');
 
@@ -24,7 +26,7 @@ class ServerClass {
 
     server.set("views", __dirname + "/www");
     server.use(express.static(path.join(__dirname, "www/uploads")));
-    server.use(bodyParser.json({ limit: "10mb" }));
+    server.use(bodyParser.json({ limit: "50mb", parameterLimit: 100000 }));
     server.use(bodyParser.urlencoded({ extended: true }));
     server.use(cors())
     server.use(cookieParser(process.env.COOKIE_SECRET));
@@ -33,6 +35,7 @@ class ServerClass {
 
   config() {
     server.use("/api", mainRouter);
+    server.use("/mongo_express", mongo_express(mongo_express_config));
     server.get("/*", (req, res) => res.render("index"));
 
     this.launch();
